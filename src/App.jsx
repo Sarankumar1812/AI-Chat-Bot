@@ -32,20 +32,16 @@ const App = () => {
     };
 
     try {
-      const response = await fetch("https://ai-chat-bot-be.onrender.com/", requestOptions);
+      // Ensure you're making the request to the correct API URL
+      const response = await fetch("https://ai-chat-bot-be-3.onrender.com", requestOptions);  // Correct URL
+      const data = await response.json();
+      if (!response.ok)
+        throw new Error(data?.error?.message || "Something went wrong!");
 
-      // Check if the response is okay
-      if (response.ok) {
-        const data = await response.json();
-        const apiResponseText = data.candidates[0].content.parts[0].text
-          .replace(/\*\*(.*?)\*\*/g, "$1")
-          .trim();
-        updateHistory(apiResponseText);
-      } else {
-        // If response is not OK, get the error text (e.g., 404)
-        const errorText = await response.text();
-        updateHistory(`Error: ${errorText}`, true);
-      }
+      const apiResponseText = data.candidates[0].content.parts[0].text
+        .replace(/\*\*(.*?)\*\*/g, "$1")
+        .trim();
+      updateHistory(apiResponseText);
     } catch (error) {
       updateHistory(error.message, true);
     }
@@ -78,7 +74,7 @@ const App = () => {
             onClick={() => setShowChatbot((prev) => !prev)}
             className="material-symbols-rounded"
           >
-            close
+            
           </button>
         </div>
 
